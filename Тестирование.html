@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Тестирование по теме GIT</title>
+        <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #121212;
+      color: #e0e0e0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: #1e1e1e;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+      border: 1px solid #333;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #ffffff;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #bb86fc;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #a370db;
+    }
+
+    button:disabled {
+      background-color: #555;
+      cursor: not-allowed;
+    }
+
+    .option {
+      display: block;
+      margin: 12px 0;
+      padding: 12px;
+      background-color: #2d2d2d;
+      border: 1px solid #444;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s;
+      color: #e0e0e0;
+      text-align: left;
+      padding-left: 20px;
+    }
+
+    .option:hover {
+      background-color: #3a3a3a;
+    }
+
+    .option.selected {
+      background-color: #bb86fc;
+      color: #000;
+      font-weight: bold;
+    }
+
+    p {
+      margin: 16px 0;
+      line-height: 1.5;
+    }
+  </style>
+    </head>
+    <body>
+
+        <div class="container">
+            <div id="welcome" class="screen active">
+                <h1>Тест по Git</h1>
+                <p>Проверьте свои знания всех пройденных команд Git.</p>
+                <button onclick="startTest()">Начать</button>
+            </div>
+
+            <div id="quiz" class="screen"></div>
+
+            <div id="result" class="screen">
+                <h1>Результат</h1>
+                <p id="scoreText"></p>
+            </div>
+        </div>
+
+        <script>
+  const questions = [
+    {
+      text: "Какая команда настраивает ваше имя для всех коммитов на этом компьютере?",
+      options: [
+        { text: "<code>git setup name \"Имя\"</code>", correct: false },
+        { text: "<code>git config --global user.name \"Имя\"</code>", correct: true },
+        { text: "<code>git user set \"Имя\"</code>", correct: false },
+        { text: "<code>git init --name \"Имя\"</code>", correct: false }
+      ]
+    },
+    {
+      text: "Какая команда настраивает ваш email для всех коммитов на этом компьютере?",
+      options: [
+        { text: "<code>git config --global user.email \"email@example.com\"</code>", correct: true },
+        { text: "<code>git setup email \"email@example.com\"</code>", correct: false },
+        { text: "<code>git user email \"email@example.com\"</code>", correct: false },
+        { text: "<code>git commit --email \"email@example.com\"</code>", correct: false }
+      ]
+    },
+    {
+      text: "Что делает команда <code>git init</code>?",
+      options: [
+        { text: "Добавляет файлы в индекс", correct: false },
+        { text: "Создаёт новый локальный репозиторий в текущей папке", correct: true },
+        { text: "Отправляет изменения на GitHub", correct: false },
+        { text: "Показывает историю коммитов", correct: false }
+      ]
+    },
+    {
+      text: "Какая команда показывает, какие файлы изменены, добавлены в индекс или не отслеживаются?",
+      options: [
+        { text: "<code>git log</code>", correct: false },
+        { text: "<code>git diff</code>", correct: false },
+        { text: "<code>git status</code>", correct: true },
+        { text: "<code>git show</code>", correct: false }
+      ]
+    },
+    {
+      text: "Что делает команда <code>git add hello.py</code>?",
+      options: [
+        { text: "Фиксирует изменения в файле <code>hello.py</code> в истории", correct: false },
+        { text: "Удаляет файл <code>hello.py</code> из репозитория", correct: false },
+        { text: "Добавляет изменения в файле <code>hello.py</code> в индекс", correct: true },
+        { text: "Создаёт новый файл <code>hello.py</code>", correct: false }
+      ]
+    },
+    {
+      text: "Что делает команда <code>git add .</code>?",
+      options: [
+        { text: "Фиксирует все изменения во всех файлах", correct: false },
+        { text: "Добавляет все изменения во всех файлах текущей папки в индекс", correct: true },
+        { text: "Удаляет все файлы, кроме скрытых", correct: false },
+        { text: "Показывает статус всех файлов", correct: false }
+      ]
+    },
+    {
+      text: "Что делает команда <code>git commit -m \"сообщение\"</code>?",
+      options: [
+        { text: "Создаёт новую ветку с именем \"сообщение\"", correct: false },
+        { text: "Сохраняет снимок всех файлов из индекса в истории проекта", correct: true },
+        { text: "Откатывает проект к предыдущему состоянию", correct: false },
+        { text: "Добавляет файл \"сообщение\" в репозиторий", correct: false }
+      ]
+    },
+    {
+      text: "Какая команда выводит краткий список всех коммитов в проекте (одна строка на коммит)?",
+      options: [
+        { text: "<code>git history --short</code>", correct: false },
+        { text: "<code>git log --oneline</code>", correct: true },
+        { text: "<code>git commits --list</code>", correct: false },
+        { text: "<code>git log -1</code>", correct: false }
+      ]
+    }
+  ];
+
+  let shuffledQuestions = [];
+  let currentQuestionIndex = 0;
+  let userAnswers = {};
+
+  function shuffle(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function startTest() {
+    shuffledQuestions = shuffle(questions.map(q => {
+      return {
+        text: q.text,
+        options: shuffle(q.options)
+      };
+    }));
+    currentQuestionIndex = 0;
+    userAnswers = {};
+    showQuestion(currentQuestionIndex);
+  }
+
+  function showQuestion(index) {
+    const question = shuffledQuestions[index];
+    const isLast = index === shuffledQuestions.length - 1;
+
+    let optionsHtml = '';
+    question.options.forEach((opt, i) => {
+      const letter = String.fromCharCode(65 + i); // A, B, C, D
+      optionsHtml += `
+        <div class="option"
+             data-qindex="${index}"
+             data-optindex="${i}"
+             onclick="selectOption(this)">
+          ${letter}) ${opt.text}
+        </div>`;
+    });
+
+    document.getElementById('quiz').innerHTML = `
+      <h1>Вопрос ${index + 1} из ${shuffledQuestions.length}</h1>
+      <p>${question.text}</p>
+      ${optionsHtml}
+      <button id="nextBtn" onclick="${isLast ? 'showResult()' : 'nextQuestion()'}" disabled>${
+        isLast ? 'Показать результат' : 'Далее'
+      }</button>
+    `;
+
+    document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+    document.getElementById('quiz').classList.add('active');
+  }
+
+  function selectOption(element) {
+    const qIndex = parseInt(element.getAttribute('data-qindex'));
+    const optIndex = parseInt(element.getAttribute('data-optindex'));
+
+    document.querySelectorAll(`.option[data-qindex="${qIndex}"]`).forEach(el => {
+      el.classList.remove('selected');
+    });
+
+    element.classList.add('selected');
+    userAnswers[qIndex] = shuffledQuestions[qIndex].options[optIndex];
+    document.getElementById('nextBtn').disabled = false;
+  }
+
+  function nextQuestion() {
+    currentQuestionIndex++;
+    showQuestion(currentQuestionIndex);
+  }
+
+  function showResult() {
+    let score = 0;
+    shuffledQuestions.forEach((q, idx) => {
+      const userAnswer = userAnswers[idx];
+      if (userAnswer && userAnswer.correct) {
+        score++;
+      }
+    });
+
+    const total = shuffledQuestions.length;
+    const percent = Math.round((score / total) * 100);
+    document.getElementById('scoreText').textContent =
+      `Вы ответили правильно на ${score} из ${total} вопросов (${percent}%)`;
+
+    document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+    document.getElementById('result').classList.add('active');
+  }
+</script>
+
+    </body>
+</html>
