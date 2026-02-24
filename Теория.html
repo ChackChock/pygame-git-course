@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Основы pygame-ce</title>
+        <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #121212;
+      color: #e0e0e0;
+      margin: 0;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 20px 0;
+    }
+
+    h1 {
+      color: #ffffff;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      color: #bb86fc;
+      margin-top: 40px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #333;
+      padding-bottom: 8px;
+    }
+
+    h3 {
+      color: #03dac6;
+      margin-top: 24px;
+      margin-bottom: 12px;
+    }
+
+    p, li {
+      margin: 12px 0;
+      font-size: 1.05rem;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    code {
+      background: #2d2d2d;
+      color: #bb86fc;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 1.05rem;
+    }
+
+    pre code {
+      display: block;
+      background: #1a1a1a;
+      color: #e0e0e0;
+      padding: 16px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      line-height: 1.5;
+      overflow-x: auto;
+      border: 1px solid #333;
+    }
+
+    .section {
+      background: #1e1e1e;
+      padding: 25px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      border: 1px solid #333;
+    }
+
+    a {
+      color: #bb86fc;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2rem;
+      }
+      .container {
+        padding: 0 10px;
+      }
+    }
+  </style>
+    </head>
+    <body>
+
+        <div class="container">
+            <header>
+                <h1>Основы pygame-ce</h1>
+            </header>
+
+            <div class="section">
+                <h2>1. Что такое pygame-ce?</h2>
+                <p><strong>pygame-ce</strong> (Community Edition) — это
+                    современная и активно поддерживаемая версия библиотеки
+                    Pygame, предназначенная для создания 2D-игр и мультимедийных
+                    приложений на языке Python.</p>
+                <p>Она берёт на себя всю «низкоуровневую» работу: создание окна,
+                    обработка ввода с клавиатуры и мыши, отрисовка графики и
+                    воспроизведение звука. Это позволяет вам сосредоточиться на
+                    самой игровой логике.</p>
+            </div>
+
+            <div class="section">
+                <h2>2. Игровой цикл — сердце любой игры</h2>
+                <p>Вся игра на pygame-ce строится вокруг бесконечного цикла,
+                    который повторяется много раз в секунду (обычно 60 раз).
+                    Этот цикл состоит из трёх ключевых этапов:</p>
+                <ol>
+                    <li><strong>Обработка событий (Event Handling):</strong>
+                        Проверка, что произошло: нажата клавиша, кликнул ли
+                        пользователь мышью, закрыл ли окно. Реализуется через
+                        <code>for event in pygame.event.get()</code>.</li>
+                    <li><strong>Обновление состояния игры (Update):</strong>
+                        Здесь происходит вся логика: персонажи двигаются,
+                        проверяются столкновения, генерируются враги.</li>
+                    <li><strong>Отрисовка (Rendering):</strong> Всё, что было
+                        обновлено, рисуется на экране. Сначала очищается старый
+                        кадр, затем отрисовываются объекты, и в конце экран
+                        обновляется.</li>
+                </ol>
+                <p>Поняв этот цикл, вы поймёте, как работают все игры на
+                    Pygame.</p>
+            </div>
+
+            <div class="section">
+                <h2>3. Основные компоненты кода</h2>
+
+                <h3>Инициализация и окно</h3>
+                <p>Любая игра начинается с запуска Pygame и создания окна.</p>
+                <pre><code>import pygame
+pygame.init()
+
+# Создание современного окна
+window = pygame.Window("Моя игра", (800, 600))
+surface = window.get_surface() # Поверхность для рисования</code></pre>
+
+                <h3>Управление скоростью игры (Clock)</h3>
+                <p>Чтобы игра работала с постоянной скоростью на любом
+                    компьютере, используется класс <code>pygame.Clock</code>.
+                    Метод <code>clock.tick(FPS)</code> приостанавливает
+                    выполнение цикла, чтобы он не выполнялся чаще указанного
+                    количества кадров в секунду (FPS).</p>
+                <pre><code>clock = pygame.time.Clock()
+FPS = 60
+
+# В конце игрового цикла
+clock.tick(FPS)</code></pre>
+
+                <h3>Поверхности и прямоугольники</h3>
+                <p><strong>Surface</strong> — это область пикселей, на которой
+                    можно рисовать (например, спрайт или всё окно).<br>
+                    <strong>Rect</strong> — это прямоугольник, который хранит
+                    координаты и размеры объекта. Он используется для
+                    позиционирования и проверки столкновений.</p>
+                <pre><code># Создание простого спрайта
+player_image = pygame.Surface((50, 50))
+player_rect = player_image.get_rect()
+player_rect.center = (400, 300)
+
+# Отрисовка
+surface.blit(player_image, player_rect)</code></pre>
+
+                <h3>Векторы для движения</h3>
+                <p>Класс <code>pygame.Vector2</code> упрощает расчёты
+                    направления и скорости движения объектов.</p>
+                <pre><code># Вектор от игрока к позиции мыши
+vector = pygame.Vector2(mouse_x - player_x, mouse_y - player_y)
+# Нормализация для получения единичного вектора направления
+direction = vector.normalize()</code></pre>
+            </div>
+
+            <div class="section">
+                <h2>4. Важные принципы</h2>
+                <ul>
+                    <li><strong>Порядок отрисовки важен:</strong> Объекты,
+                        нарисованные позже, будут перекрывать объекты,
+                        нарисованные раньше.</li>
+                    <li><strong>Очистка экрана:</strong> Перед каждой новой
+                        отрисовкой необходимо очищать экран с помощью
+                        <code>surface.fill(color)</code>, иначе кадры будут
+                        накладываться друг на друга.</li>
+                    <li><strong>Обновление экрана:</strong> Все изменения на
+                        поверхности становятся видны только после вызова
+                        <code>window.flip()</code>.</li>
+                </ul>
+                <p>Соблюдение этих простых правил поможет вам избежать самых
+                    распространённых ошибок при создании игр.</p>
+            </div>
+
+        </div>
+    </body>
+</html>

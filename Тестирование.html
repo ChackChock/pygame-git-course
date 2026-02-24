@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Тестирование по теме pygame-ce</title>
+        <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #121212;
+      color: #e0e0e0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: #1e1e1e;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+      border: 1px solid #333;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #ffffff;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #bb86fc;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #a370db;
+    }
+
+    button:disabled {
+      background-color: #555;
+      cursor: not-allowed;
+    }
+
+    .option {
+      display: block;
+      margin: 12px 0;
+      padding: 12px;
+      background-color: #2d2d2d;
+      border: 1px solid #444;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s;
+      color: #e0e0e0;
+      text-align: left;
+      padding-left: 20px;
+    }
+
+    .option:hover {
+      background-color: #3a3a3a;
+    }
+
+    .option.selected {
+      background-color: #bb86fc;
+      color: #000;
+      font-weight: bold;
+    }
+
+    p {
+      margin: 16px 0;
+      line-height: 1.5;
+    }
+  </style>
+    </head>
+    <body>
+
+        <div class="container">
+            <div id="welcome" class="screen active">
+                <h1>Тест по pygame-ce</h1>
+                <p>Проверьте свои знания по основам библиотеки pygame-ce и
+                    структуре игрового цикла.</p>
+                <button onclick="startTest()">Начать</button>
+            </div>
+
+            <div id="quiz" class="screen"></div>
+
+            <div id="result" class="screen">
+                <h1>Результат</h1>
+                <p id="scoreText"></p>
+            </div>
+        </div>
+
+        <script>
+  const questions = [
+    {
+      text: "Что такое pygame-ce?",
+      options: [
+        { text: "Фреймворк для веб-разработки на Python", correct: false },
+        { text: "Современная библиотека для создания 2D-игр и мультимедийных приложений на Python", correct: true },
+        { text: "Система контроля версий для игр", correct: false },
+        { text: "Инструмент для рисования пикселей", correct: false }
+      ]
+    },
+    {
+      text: "Из каких трёх основных этапов состоит игровой цикл?",
+      options: [
+        { text: "Загрузка, Игра, Выход", correct: false },
+        { text: "Обработка событий, Обновление состояния, Отрисовка", correct: true },
+        { text: "Создание спрайтов, Движение, Столкновения", correct: false },
+        { text: "Инициализация, Цикл, Завершение", correct: false }
+      ]
+    },
+    {
+      text: "Какой метод используется для обработки событий (нажатий клавиш, кликов мыши) в Pygame?",
+      options: [
+        { text: "<code>pygame.get_input()</code>", correct: false },
+        { text: "<code>pygame.events()</code>", correct: false },
+        { text: "<code>pygame.event.get()</code>", correct: true },
+        { text: "<code>pygame.listen()</code>", correct: false }
+      ]
+    },
+    {
+      text: "Для чего используется класс <code>pygame.Clock</code>?",
+      options: [
+        { text: "Для отображения текущего времени в игре", correct: false },
+        { text: "Для синхронизации звука и графики", correct: false },
+        { text: "Для контроля скорости игрового цикла (FPS)", correct: true },
+        { text: "Для создания таймеров внутри игры", correct: false }
+      ]
+    },
+    {
+      text: "Что такое <code>Surface</code> в контексте Pygame?",
+      options: [
+        { text: "Это физическая поверхность монитора", correct: false },
+        { text: "Это прямоугольная область пикселей, на которой можно рисовать", correct: true },
+        { text: "Это тип данных для хранения координат", correct: false },
+        { text: "Это файл с изображением", correct: false }
+      ]
+    },
+    {
+      text: "Какой объект в Pygame обычно используется для хранения координат и размеров спрайта, а также для проверки столкновений?",
+      options: [
+        { text: "<code>Vector2</code>", correct: false },
+        { text: "<code>Point</code>", correct: false },
+        { text: "<code>Rect</code>", correct: true },
+        { text: "<code>Box</code>", correct: false }
+      ]
+    },
+    {
+      text: "Какой метод необходимо вызвать, чтобы изменения, нарисованные на поверхности, стали видны на экране?",
+      options: [
+        { text: "<code>pygame.display.update()</code>", correct: false },
+        { text: "<code>window.refresh()</code>", correct: false },
+        { text: "<code>window.flip()</code>", correct: true },
+        { text: "<code>surface.show()</code>", correct: false }
+      ]
+    },
+    {
+      text: "Почему перед каждой новой отрисовкой кадра нужно очищать экран с помощью <code>surface.fill()</code>?",
+      options: [
+        { text: "Чтобы освободить оперативную память", correct: false },
+        { text: "Чтобы предотвратить наложение старых кадров на новые", correct: true },
+        { text: "Это не обязательно, Pygame делает это автоматически", correct: false },
+        { text: "Чтобы изменить цвет фона", correct: false }
+      ]
+    },
+    {
+      text: "Какой класс в Pygame упрощает расчёты направления и скорости движения объектов?",
+      options: [
+        { text: "<code>pygame.Motion</code>", correct: false },
+        { text: "<code>pygame.Direction</code>", correct: false },
+        { text: "<code>pygame.Vector2</code>", correct: true },
+        { text: "<code>pygame.Speed</code>", correct: false }
+      ]
+    },
+    {
+      text: "В каком порядке должны выполняться действия в игровом цикле?",
+      options: [
+        { text: "1. Отрисовка, 2. Обработка событий, 3. Обновление состояния", correct: false },
+        { text: "1. Обработка событий, 2. Обновление состояния, 3. Отрисовка", correct: true },
+        { text: "1. Обновление состояния, 2. Отрисовка, 3. Обработка событий", correct: false },
+        { text: "1. Инициализация, 2. Игровой цикл, 3. Завершение", correct: false }
+      ]
+    }
+  ];
+
+  let shuffledQuestions = [];
+  let currentQuestionIndex = 0;
+  let userAnswers = {};
+
+  function shuffle(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function startTest() {
+    shuffledQuestions = shuffle(questions.map(q => {
+      return {
+        text: q.text,
+        options: shuffle(q.options)
+      };
+    }));
+    currentQuestionIndex = 0;
+    userAnswers = {};
+    showQuestion(currentQuestionIndex);
+  }
+
+  function showQuestion(index) {
+    const question = shuffledQuestions[index];
+    const isLast = index === shuffledQuestions.length - 1;
+
+    let optionsHtml = '';
+    question.options.forEach((opt, i) => {
+      const letter = String.fromCharCode(65 + i); // A, B, C, D
+      optionsHtml += `
+        <div class="option"
+             data-qindex="${index}"
+             data-optindex="${i}"
+             onclick="selectOption(this)">
+          ${letter}) ${opt.text}
+        </div>`;
+    });
+
+    document.getElementById('quiz').innerHTML = `
+      <h1>Вопрос ${index + 1} из ${shuffledQuestions.length}</h1>
+      <p>${question.text}</p>
+      ${optionsHtml}
+      <button id="nextBtn" onclick="${isLast ? 'showResult()' : 'nextQuestion()'}" disabled>${
+        isLast ? 'Показать результат' : 'Далее'
+      }</button>
+    `;
+
+    document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+    document.getElementById('quiz').classList.add('active');
+  }
+
+  function selectOption(element) {
+    const qIndex = parseInt(element.getAttribute('data-qindex'));
+    const optIndex = parseInt(element.getAttribute('data-optindex'));
+
+    document.querySelectorAll(`.option[data-qindex="${qIndex}"]`).forEach(el => {
+      el.classList.remove('selected');
+    });
+
+    element.classList.add('selected');
+    userAnswers[qIndex] = shuffledQuestions[qIndex].options[optIndex];
+    document.getElementById('nextBtn').disabled = false;
+  }
+
+  function nextQuestion() {
+    currentQuestionIndex++;
+    showQuestion(currentQuestionIndex);
+  }
+
+  function showResult() {
+    let score = 0;
+    shuffledQuestions.forEach((q, idx) => {
+      const userAnswer = userAnswers[idx];
+      if (userAnswer && userAnswer.correct) {
+        score++;
+      }
+    });
+
+    const total = shuffledQuestions.length;
+    const percent = Math.round((score / total) * 100);
+    document.getElementById('scoreText').textContent =
+      `Вы ответили правильно на ${score} из ${total} вопросов (${percent}%)`;
+
+    document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+    document.getElementById('result').classList.add('active');
+  }
+</script>
+
+    </body>
+</html>
